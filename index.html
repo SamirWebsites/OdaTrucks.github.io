@@ -20,21 +20,31 @@
             font-size: 24px;
         }
 
+        #score {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
         #guy {
             position: absolute;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
             transition: transform 0.5s;
-            height: 150px;
+            height: 300px; /* Doubled size */
+            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.5));
         }
 
         #truck {
             position: absolute;
-            left: -200px;
+            left: -400px; /* Adjusted for larger size */
             top: 50%;
             transform: translateY(-50%);
-            height: 100px;
+            height: 200px; /* Doubled size */
             display: none;
         }
 
@@ -44,7 +54,7 @@
             top: 50%;
             transform: translate(-50%, -50%);
             display: none;
-            height: 150px;
+            height: 300px; /* Doubled size */
         }
 
         .flipped {
@@ -54,6 +64,7 @@
 </head>
 <body>
     <div id="text">Click to run him over.</div>
+    <div id="score">Times ran over: 0</div>
     <img id="guy" src="https://static.wikia.nocookie.net/villains/images/a/ad/JunOdaRender.webp" alt="Victim">
     <img id="truck" src="https://static.vecteezy.com/system/resources/thumbnails/023/832/812/small_2x/photo-white-truck-on-transparent-background-png.png" alt="Truck">
     <img id="explosion" src="https://i.gifer.com/origin/a0/a07ad08920f303f655251b1a0b353b86_w200.gif" alt="Explosion">
@@ -62,11 +73,18 @@
         const guy = document.getElementById('guy');
         const truck = document.getElementById('truck');
         const explosion = document.getElementById('explosion');
+        const scoreElement = document.getElementById('score');
         let isAnimating = false;
+        let score = 0;
 
         function playSound() {
             const sound = new Audio('https://www.myinstants.com/media/sounds/deltarune-explosion.mp3');
             sound.play();
+        }
+
+        function updateScore() {
+            score++;
+            scoreElement.textContent = `Score: ${score}`;
         }
 
         function runOver() {
@@ -74,7 +92,7 @@
             
             isAnimating = true;
             truck.style.display = 'block';
-            truck.style.left = '-200px';
+            truck.style.left = '-400px'; // Adjusted starting position
             
             let collisionDetected = false;
             const animation = setInterval(() => {
@@ -91,8 +109,8 @@
                     explosion.style.display = 'block';
                     guy.classList.add('flipped');
                     playSound();
+                    updateScore();
                     
-                    // Hide explosion after 1 second
                     setTimeout(() => {
                         explosion.style.display = 'none';
                     }, 1000);
@@ -105,7 +123,7 @@
                     guy.classList.remove('flipped');
                     isAnimating = false;
                 }
-            }, 16); // ~60fps
+            }, 16);
         }
 
         document.addEventListener('click', runOver);
